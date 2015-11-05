@@ -1,5 +1,7 @@
 package com.one.example.criminalintent;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +14,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
@@ -40,6 +45,20 @@ public class CrimeFragment extends Fragment {
         crime = CrimeLab.get(getActivity()).getCrime(crimeId);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Activity.RESULT_OK != requestCode){
+            return;
+        }
+        Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+        crime.setDate(date);
+        updateDate();
+    }
+
+    private void updateDate() {
+        dateButton.setText(crime.getDate().toString());
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_crime, container, false);
         title = (EditText) view.findViewById(R.id.crime_title);
@@ -61,16 +80,17 @@ public class CrimeFragment extends Fragment {
             }
         });
         dateButton = (Button) view.findViewById(R.id.crime_date);
-        dateButton.setText(crime.getDate().toString());
+        updateDate();
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 FragmentManager manager = getFragmentManager();
                 DatePickerFragment fragment = DatePickerFragment.newInstance(crime.getDate());
                 fragment.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                 fragment.show(manager, DIALOG_DATE);
             }
         });
+
 
         solved = (CheckBox) view.findViewById(R.id.crime_solved);
         solved.setChecked(crime.isSolved());
