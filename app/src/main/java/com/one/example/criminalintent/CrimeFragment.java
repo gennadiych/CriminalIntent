@@ -14,9 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TimePicker;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,8 +24,8 @@ public class CrimeFragment extends Fragment {
     private Button dateButton;
     private CheckBox solved;
 
-    public static final String ARG_CRIME_ID = "crime_id";
-    public static final String DIALOG_DATE = "DialogDate";
+    private static final String ARG_CRIME_ID = "crime_id";
+    private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
 
     public static CrimeFragment newInstance(UUID crimeId) {
@@ -46,13 +44,15 @@ public class CrimeFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (Activity.RESULT_OK != requestCode){
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (Activity.RESULT_OK != resultCode) {
             return;
         }
-        Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-        crime.setDate(date);
-        updateDate();
+        if (requestCode == REQUEST_DATE) {
+            Date date = (Date) intent.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            crime.setDate(date);
+            updateDate();
+        }
     }
 
     private void updateDate() {

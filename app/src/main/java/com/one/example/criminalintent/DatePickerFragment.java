@@ -29,7 +29,7 @@ public class DatePickerFragment extends DialogFragment {
         return fragment;
     }
 
-    private void sentResult(int resultCode, Date date) {
+    private void sendResult(int resultCode, Date date) {
         if (null == getTargetFragment()) {
             return;
         }
@@ -57,7 +57,7 @@ public class DatePickerFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Date date = new GregorianCalendar(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth()).getTime();
-                        sentResult(Activity.RESULT_OK, date);
+                        sendResult(Activity.RESULT_OK, date);
                     }
                 })
                 .create();
